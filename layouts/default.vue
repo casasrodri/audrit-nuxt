@@ -1,22 +1,17 @@
 <script setup>
 import '~/assets/css/global.css'
-const menuUserAbierto = useState('menuUserAbierto', () => false)
+import 'primeicons/primeicons.css'
+// import 'primevue/resources/themes/aura-light-cyan/theme.css'
+import 'primevue/resources/themes/aura-light-cyan/theme.css'
 
-function pruebaTecla(event) {
-    console.log('Se apretó una tecla!')
-    if (event.key === "Escape") {
-        menuUserAbierto.value = false;
-    }
-}
+import { abrirModalBuscador, abrirModalUsuario } from '~/services/modals.js';
 
-function abrirMenuUsuario() {
-    menuUserAbierto.value = true;
-}
 
 document.addEventListener('keydown', function (event) {
     if (event.ctrlKey && event.key === 'k') {
+        // console.log('Se apretó Ctrl+k!')
         event.preventDefault()
-        alert('[Ctrl+K] 🔎 En este momento se abriría el buscador...');
+        abrirModalBuscador()
     }
 });
 
@@ -27,77 +22,53 @@ document.addEventListener('keydown', function (event) {
     }
 });
 
-document.addEventListener('keydown', function (event) {
-    if (event.key === 'Escape') {
-        event.preventDefault()
-        menuUserAbierto.value = false;
-    }
-});
+
+// document.addEventListener('keydown', function (event) {
+//     if (event.key === 'Escape') {
+//         event.preventDefault()
+//         menuUserAbierto.value = false;
+//     }
+// });
+
+useHead({ title: 'Audrit' })
 
 </script>
 
 
 
 <template>
-    <!DOCTYPE html>
-    <html lang="es" class="scroll-smooth">
+    <body>
+        <!--  body: @keydown="pruebaTecla" -->
+        <div id="contenedor-app" class="flex flex-grow">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Audrit</title>
-    </head>
-
-    <body @keydown="pruebaTecla">
-        <div id="contenedor-app" class="flex flex-grow" @keydown="pruebaTecla">
             <nav id="app-nav"
                 class="group/nav h-screen fixed min-w-14 hover:min-w-52 transition-all duration-500 ease-in-out border-r-[1px] border-gray-200 bg-white/95 flex flex-col px-3 py-4 z-20">
-                <div id="app-nav-header" class="mb-3 ml-[6px] flex flex-row">
-                    <Icon name="ph:webhooks-logo-duotone" size="32" color="#0768a0" />
-                    <span id="nombre"
-                        class="ml-2 items-center hidden group-hover/nav:inline-flex font-extralight text-2xl text-cyan-700"
-                        style="font-family: 'Rubik';">
-                        Audrit
-                    </span>
-                </div>
+                <NuxtLink to="/">
+                    <div id="app-nav-header" class="mb-3 ml-[6px] flex flex-row">
+                        <Icon name="ph:webhooks-logo-duotone" size="32" color="#0768a0" />
+                        <span id="nombre"
+                            class="ml-2 items-center hidden group-hover/nav:inline-flex font-extralight text-2xl text-cyan-700"
+                            style="font-family: 'Rubik';">
+                            Audrit
+                        </span>
+                    </div>
+                </NuxtLink>
 
                 <hr class="my-1">
                 <div id="app-nav-menu" class="flex flex-col">
-                    <BotonNavLateral nombre="Auditorías" href="/auditorias">
-                        <Icon name="ri:user-search-line" size="24" />
-                    </BotonNavLateral>
-
-                    <BotonNavLateral nombre="Observaciones" href="/observaciones">
-                        <Icon name="ri:eye-line" size="24" />
-                    </BotonNavLateral>
-
-                    <BotonNavLateral nombre="Requerimientos" href="/requerimientos">
-
-                        <Icon name="ri:archive-2-line" size="24" />
-                    </BotonNavLateral>
-
-                    <BotonNavLateral nombre="Parámetros" href="/parametros">
-                        <Icon name="icon-park-outline:setting-config" size="24" />
-                    </BotonNavLateral>
-
+                    <BotonLateralLink menu="auditorias" />
+                    <BotonLateralLink menu="observaciones" />
+                    <BotonLateralLink menu="requerimientos" />
+                    <BotonLateralLink menu="parametros" />
                 </div>
                 <div id="app-nav-footer" class="mt-auto mb-0">
-
-                    <BotonNavLateral nombre="Buscar">
-                        <Icon name="iconamoon:search-duotone" size="24" />
-                    </BotonNavLateral>
-
-                    <BotonNavLateral nombre="Chat IA">
-                        <Icon name="iconamoon:comment-duotone" size="24" />
-                    </BotonNavLateral>
-
-                    <BotonNavLateral nombre="Configuración">
-                        <Icon name="iconamoon:settings-duotone" size="24" />
-                    </BotonNavLateral>
+                    <BotonLateralModal menu="buscar" />
+                    <BotonLateralModal menu="asistente" />
+                    <BotonLateralLink menu="configuracion" />
 
                     <hr class="my-1">
 
-                    <div id="logo-user" @click="abrirMenuUsuario" class="ml-[3px] inline-flex items-center justify-center">
+                    <div id="logo-user" @click="abrirModalUsuario" class="ml-[3px] inline-flex items-center justify-center">
                         <span id="logo" class="w-8 h-8 inline-flex items-center justify-center">
                             <!-- <img :src="userAvatar" alt="Perfil del usuario"> -->
                             <div
@@ -113,16 +84,16 @@ document.addEventListener('keydown', function (event) {
                 </div>
             </nav>
 
-            <div class="min-w-14 hover:min-w-52"></div>
+            <div id="margen" class="min-w-14 hover:min-w-52"></div>
 
-            <main id="contenido-principal" class="flex flex-col pl-2">
+            <main id="contenido-principal" class="flex flex-col pl-2 min-w-min min-h-min">
                 <slot />
             </main>
-        </div>
-        <MenuFlotanteUser />
-    </body>
 
-    </html>
+            <ModalBusqueda />
+            <ModalUsuario />
+        </div>
+    </body>
 </template>
 
 <style scoped>

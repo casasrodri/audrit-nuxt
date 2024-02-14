@@ -1,12 +1,12 @@
 <script setup>
+
 </script>
 
 <template>
-    <SubLayout ventana="Ciclos">
+    <SubLayout ventana="Configuración">
         <template #header>
-            Ciclos
+            Configuración
         </template>
-
-        Configurar ciclos
+        Esta es la configuración
     </SubLayout>
 </template>

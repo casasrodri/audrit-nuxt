@@ -1,11 +1,41 @@
 <script setup>
+import api from '../services/api/index.js'
+import Swal from 'sweetalert2'
+
 definePageMeta({
     layout: 'vacio'
 })
+useHead({ title: 'Iniciar sesión' })
 const user = ref({
     email: 'rodri@casas.com',
     password: 'rodri'
 })
+
+async function login() {
+    try {
+        const response = await api.post('/jwt', user.value)
+
+        if (response.data.status === 'ok') {
+            // TODO: Acá habría que pedir los menus del usuario
+            await navigateTo('/')
+        } else {
+            Swal.fire({
+                title: "Error de acceso",
+                text: response.data.message,
+                icon: "error"
+            });
+        }
+    } catch (error) {
+        console.error(error.response)
+
+        Swal.fire({
+            title: "Error de acceso",
+            text: error.response.data.detail,
+            icon: "error"
+        });
+    }
+}
+
 </script>
 
 <template>
@@ -31,12 +61,10 @@ const user = ref({
             </div>
 
             <div class="flex justify-center mx-auto my-5">
-                <button type="submit" class="rounded-xl bg-[#0768a0] text-white p-2 px-7">Ingresar</button>
+                <button type="submit" class="rounded-xl bg-[#0768a0] text-white p-2 px-7" @click.prevent="login">
+                    Ingresar
+                </button>
             </div>
-
-            <!-- <span class="block text-cyan-700 mt-16">
-                {{ user }}
-            </span> -->
         </form>
     </div>
 </template>

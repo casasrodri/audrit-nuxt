@@ -8,5 +8,9 @@
         </template>
 
         <!-- <Lorem /> -->
+
+
+
+        <input type="email" name="osdi" id="">
     </SubLayout>
 </template>
